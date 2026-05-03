@@ -124,8 +124,10 @@
       background: var(--glass); backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--glass-border); border-radius: 28px;
-      padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06), 0 0 80px rgba(168,85,247,0.08);
-      display: flex; flex-direction: column; gap: 24px; position: relative; overflow: hidden;
+      padding: 36px 32px 40px; /* 加多咗少少底部 padding */
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06), 0 0 80px rgba(168,85,247,0.08);
+      display: flex; flex-direction: column; gap: 28px; /* 由 24px 加到 28px */
+      position: relative; overflow: hidden;
     }
     #card::before {
       content: ''; position: absolute; top: -50%; left: -50%;
@@ -230,7 +232,11 @@
     .preset-edit:hover { background: var(--primary); color: #fff; }
 
     /* Controls */
-    .controls { display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 1; }
+    .controls {
+      display: flex; flex-direction: column; gap: 12px;
+      position: relative; z-index: 1;
+      margin-top: 12px; /* 加咗呢行：按鈕同上面內容之間多啲空間 */
+    }
     .btn-row { display: flex; gap: 12px; }
     .btn {
       padding: 16px 24px; border-radius: 16px; border: none; font-family: inherit;
@@ -313,7 +319,7 @@
 
     /* Responsive */
     @media (max-width: 640px) {
-      #card { padding: 24px 20px; border-radius: 20px; }
+      #card { padding: 28px 20px 32px; border-radius: 20px; gap: 24px; }
       #time-display { font-size: 2.8rem; letter-spacing: 3px; gap: 4px; }
       #stopwatch-display { font-size: 2.2rem; }
       .btn { padding: 14px 20px; font-size: 0.95rem; }
