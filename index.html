@@ -124,9 +124,9 @@
       background: var(--glass); backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--glass-border); border-radius: 28px;
-      padding: 36px 32px 56px; /* 底部 padding 加大到 56px */
+      padding: 36px 32px 56px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06), 0 0 80px rgba(168,85,247,0.08);
-      display: flex; flex-direction: column; gap: 32px; /* gap 加大到 32px */
+      display: flex; flex-direction: column; gap: 32px;
       position: relative; overflow: hidden;
     }
     #card::before {
@@ -209,7 +209,13 @@
       box-shadow: 0 0 15px rgba(168,85,247,0.2); transform: translateY(-2px);
     }
 
-    #presets-area { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+    #presets-area { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+      align-items: center; 
+      margin-top: 16px;   /* ← 加咗呢行：preset 向下移 */
+    }
     #presets-header { display: flex; align-items: center; gap: 10px; width: 100%; justify-content: center; }
     #presets-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
     .preset-btn {
@@ -235,7 +241,7 @@
     .controls {
       display: flex; flex-direction: column; gap: 12px;
       position: relative; z-index: 1;
-      margin-top: 40px; /* 由 12px 大幅加到 28px */
+      margin-top: 40px;
     }
     .btn-row { display: flex; gap: 12px; }
     .btn {
@@ -319,14 +325,14 @@
 
     /* Responsive */
     @media (max-width: 640px) {
-      #card { padding: 28px 20px 44px; border-radius: 20px; gap: 28px; } /* 手機版底部同 gap 都加大 */
+      #card { padding: 28px 20px 44px; border-radius: 20px; gap: 28px; }
       #time-display { font-size: 2.8rem; letter-spacing: 3px; gap: 4px; }
       #stopwatch-display { font-size: 2.2rem; }
       .btn { padding: 14px 20px; font-size: 0.95rem; }
       .pill-btn { padding: 6px 14px; font-size: 0.8rem; }
       #completion-message { font-size: 1.8rem; }
       .display-area { padding: 12px 0; }
-      .controls { margin-top: 24px; } /* 手機版都加大 */
+      .controls { margin-top: 24px; }
     }
     @media (max-width: 380px) {
       #time-display { font-size: 2.2rem; letter-spacing: 2px; }
