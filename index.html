@@ -4,15 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cosmos Timer</title>
-  <!-- Orbitron font for sci-fi look -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&display=swap" rel="stylesheet">
   
   <style>
-    /* ============================================
-       CSS VARIABLES & RESET
-       ============================================ */
     :root {
       --bg: #0a0a0f;
       --primary: #a855f7;
@@ -25,40 +21,21 @@
       --warning: #f97316;
       --danger: #ef4444;
       --success: #34d399;
-      --glow-primary: 0 0 20px rgba(168, 85, 247, 0.4);
-      --glow-secondary: 0 0 20px rgba(34, 211, 238, 0.4);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
+      width: 100%; height: 100%; overflow: hidden;
       background: var(--bg);
       font-family: 'Orbitron', 'Segoe UI', sans-serif;
       color: var(--text);
     }
 
-    /* ============================================
-       BACKGROUND EFFECTS
-       ============================================ */
-    /* Starfield container */
-    #starfield {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
+    /* Background Effects */
+    #starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
     .star {
-      position: absolute;
-      background: #fff;
-      border-radius: 50%;
-      opacity: 0;
+      position: absolute; background: #fff; border-radius: 50%; opacity: 0;
       animation: twinkle var(--duration, 3s) ease-in-out infinite;
       animation-delay: var(--delay, 0s);
     }
@@ -67,32 +44,24 @@
       50% { opacity: 1; transform: scale(1.2); }
     }
 
-    /* Nebula blobs */
     .nebula {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(100px);
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.12;
+      position: fixed; border-radius: 50%; filter: blur(100px);
+      pointer-events: none; z-index: 0; opacity: 0.12;
     }
     .nebula-1 {
       width: 70vw; height: 70vw; max-width: 800px; max-height: 800px;
       background: radial-gradient(circle, var(--primary-dark) 0%, transparent 70%);
-      top: -15%; left: -15%;
-      animation: drift 25s ease-in-out infinite alternate;
+      top: -15%; left: -15%; animation: drift 25s ease-in-out infinite alternate;
     }
     .nebula-2 {
       width: 60vw; height: 60vw; max-width: 700px; max-height: 700px;
       background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
-      bottom: -20%; right: -15%;
-      animation: drift 30s ease-in-out infinite alternate-reverse;
+      bottom: -20%; right: -15%; animation: drift 30s ease-in-out infinite alternate-reverse;
     }
     .nebula-3 {
       width: 50vw; height: 50vw; max-width: 600px; max-height: 600px;
       background: radial-gradient(circle, #4c1d95 0%, transparent 70%);
-      top: 40%; left: 40%;
-      animation: pulse-nebula 15s ease-in-out infinite;
+      top: 40%; left: 40%; animation: pulse-nebula 15s ease-in-out infinite;
     }
     @keyframes drift {
       from { transform: translate(0, 0) scale(1); }
@@ -103,415 +72,175 @@
       50% { opacity: 0.18; transform: scale(1.15); }
     }
 
-    /* Shooting star */
     .shooting-star {
-      position: fixed;
-      width: 120px;
-      height: 2px;
+      position: fixed; width: 120px; height: 2px;
       background: linear-gradient(90deg, rgba(255,255,255,0.9), transparent);
-      border-radius: 2px;
-      transform: rotate(-35deg);
-      opacity: 0;
-      pointer-events: none;
-      z-index: 1;
-      animation: shoot 1.2s ease-out forwards;
+      border-radius: 2px; transform: rotate(-35deg); opacity: 0;
+      pointer-events: none; z-index: 1; animation: shoot 1.2s ease-out forwards;
     }
     @keyframes shoot {
       0% { opacity: 1; transform: translateX(0) translateY(0) rotate(-35deg); }
       100% { opacity: 0; transform: translateX(400px) translateY(300px) rotate(-35deg); }
     }
 
-    /* Scanline / HUD overlay */
     #scanlines {
-      position: fixed;
-      inset: 0;
-      z-index: 2;
-      pointer-events: none;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0, 0, 0, 0.15) 2px,
-        rgba(0, 0, 0, 0.15) 4px
-      );
+      position: fixed; inset: 0; z-index: 2; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
       opacity: 0.3;
     }
 
-    /* ============================================
-       LAYOUT
-       ============================================ */
+    /* Layout */
     #app {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      position: relative; z-index: 10; width: 100%; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 20px;
     }
 
-    /* Top bar */
     #top-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 24px;
-      z-index: 50;
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px; z-index: 50;
       background: linear-gradient(to bottom, rgba(10,10,15,0.8), transparent);
     }
     #dashboard-clock {
-      font-size: 0.9rem;
-      letter-spacing: 2px;
-      color: var(--secondary);
+      font-size: 0.9rem; letter-spacing: 2px; color: var(--secondary);
       text-shadow: 0 0 10px rgba(34,211,238,0.4);
     }
-    #top-actions {
-      display: flex;
-      gap: 12px;
-    }
+    #top-actions { display: flex; gap: 12px; }
     .icon-btn {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--glass-border);
-      color: var(--text);
-      width: 40px; height: 40px;
-      border-radius: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+      color: var(--text); width: 40px; height: 40px; border-radius: 12px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; transition: all 0.3s ease; backdrop-filter: blur(10px);
     }
     .icon-btn:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: var(--primary);
-      box-shadow: var(--glow-primary);
-      transform: translateY(-2px);
+      background: rgba(255,255,255,0.1); border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(168,85,247,0.4); transform: translateY(-2px);
     }
 
-    /* Main glass card */
+    /* Main Card */
     #card {
-      width: 100%;
-      max-width: 680px;
-      background: var(--glass);
-      backdrop-filter: blur(24px);
+      width: 100%; max-width: 680px;
+      background: var(--glass); backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border: 1px solid var(--glass-border);
-      border-radius: 28px;
-      padding: 32px;
-      box-shadow: 
-        0 20px 60px rgba(0,0,0,0.5),
-        inset 0 1px 0 rgba(255,255,255,0.06),
-        0 0 80px rgba(168,85,247,0.08);
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      position: relative;
-      overflow: hidden;
+      border: 1px solid var(--glass-border); border-radius: 28px;
+      padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06), 0 0 80px rgba(168,85,247,0.08);
+      display: flex; flex-direction: column; gap: 24px; position: relative; overflow: hidden;
     }
     #card::before {
-      content: '';
-      position: absolute;
-      top: -50%; left: -50%;
+      content: ''; position: absolute; top: -50%; left: -50%;
       width: 200%; height: 200%;
       background: radial-gradient(circle at center, rgba(168,85,247,0.03) 0%, transparent 60%);
       pointer-events: none;
     }
 
     /* Tabs */
-    #tabs {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      position: relative;
-      z-index: 1;
-    }
+    #tabs { display: flex; gap: 12px; justify-content: center; position: relative; z-index: 1; }
     .tab {
-      padding: 10px 28px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--text-dim);
-      font-family: inherit;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      padding: 10px 28px; border-radius: 999px; border: 1px solid transparent;
+      background: transparent; color: var(--text-dim); font-family: inherit;
+      font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+      letter-spacing: 1px; display: flex; align-items: center; gap: 8px;
     }
-    .tab:hover {
-      color: var(--text);
-      background: rgba(255,255,255,0.03);
-    }
+    .tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
     .tab.active {
-      color: #fff;
-      background: rgba(168,85,247,0.12);
+      color: #fff; background: rgba(168,85,247,0.12);
       border-color: rgba(168,85,247,0.35);
       box-shadow: 0 0 25px rgba(168,85,247,0.15), inset 0 1px 0 rgba(255,255,255,0.08);
     }
 
-    /* ============================================
-       TIMER DISPLAY
-       ============================================ */
+    /* Timer Display */
     .display-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      position: relative;
-      z-index: 1;
+      display: flex; flex-direction: column; align-items: center; gap: 20px;
+      position: relative; z-index: 1; padding: 20px 0;
     }
 
-    /* Circular progress */
-    #progress-container {
-      position: relative;
-      width: 280px; height: 280px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #progress-svg {
-      position: absolute;
-      inset: 0;
-      transform: rotate(-90deg);
-      filter: drop-shadow(0 0 8px rgba(34,211,238,0.3));
-    }
-    .progress-track {
-      fill: none;
-      stroke: rgba(255,255,255,0.06);
-      stroke-width: 6;
-    }
-    .progress-ring {
-      fill: none;
-      stroke: url(#gradientPrimary);
-      stroke-width: 6;
-      stroke-linecap: round;
-      transition: stroke-dashoffset 0.3s ease;
-    }
-    .progress-ring.warning {
-      stroke: url(#gradientWarning);
-      filter: drop-shadow(0 0 10px rgba(249,115,22,0.5));
-    }
-
-    /* Time digits */
     #time-display {
-      font-size: 3.6rem;
-      font-weight: 700;
-      letter-spacing: 4px;
-      color: #fff;
+      font-size: 4rem; font-weight: 700; letter-spacing: 6px; color: #fff;
       text-shadow: 0 0 12px rgba(34,211,238,0.4), 0 0 40px rgba(34,211,238,0.15);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      line-height: 1;
-      position: relative;
-      z-index: 2;
+      display: flex; align-items: center; gap: 6px; line-height: 1;
     }
-    #time-display.running {
-      animation: pulse-glow 2s ease-in-out infinite;
-    }
+    #time-display.running { animation: pulse-glow 2s ease-in-out infinite; }
     #time-display.warning {
       color: var(--warning);
       text-shadow: 0 0 12px rgba(249,115,22,0.6), 0 0 40px rgba(249,115,22,0.3);
       animation: pulse-glow 0.5s ease-in-out infinite;
     }
-    #time-display.flash {
-      animation: flash-red 0.4s ease-in-out 3;
-    }
-    @keyframes pulse-glow {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.75; }
-    }
+    #time-display.flash { animation: flash-red 0.4s ease-in-out 3; }
+    @keyframes pulse-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.75; } }
     @keyframes flash-red {
       0%, 100% { color: #fff; text-shadow: 0 0 12px rgba(34,211,238,0.4); }
       50% { color: var(--danger); text-shadow: 0 0 20px rgba(239,68,68,0.8); }
     }
 
     .time-segment {
-      width: 2.2ch;
-      background: transparent;
-      border: none;
-      color: inherit;
-      font: inherit;
-      text-align: center;
-      padding: 4px 2px;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-      outline: none;
-      caret-color: var(--secondary);
+      width: 2.3ch; background: transparent; border: none; color: inherit;
+      font: inherit; text-align: center; padding: 8px 4px; border-radius: 10px;
+      transition: all 0.3s ease; outline: none; caret-color: var(--secondary);
     }
     .time-segment:focus {
       background: rgba(34,211,238,0.08);
       box-shadow: 0 0 0 2px rgba(34,211,238,0.3), 0 0 20px rgba(34,211,238,0.15);
     }
-    .time-segment:disabled {
-      opacity: 1;
-      cursor: default;
-    }
-    /* Hide number spinners */
+    .time-segment:disabled { opacity: 1; cursor: default; }
     .time-segment::-webkit-outer-spin-button,
-    .time-segment::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+    .time-segment::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .time-segment { -moz-appearance: textfield; }
 
-    .time-separator {
-      opacity: 0.5;
-      margin-top: -4px;
-    }
+    .time-separator { opacity: 0.5; margin-top: -6px; }
 
-    /* Underline below digits */
     #time-underline {
-      width: 200px;
-      height: 2px;
+      width: 220px; height: 2px;
       background: linear-gradient(90deg, transparent, var(--secondary), transparent);
-      opacity: 0.4;
-      border-radius: 2px;
-      margin-top: -12px;
-      box-shadow: 0 0 10px rgba(34,211,238,0.3);
+      opacity: 0.4; border-radius: 2px; box-shadow: 0 0 10px rgba(34,211,238,0.3);
     }
 
-    /* ============================================
-       QUICK ADD & PRESETS
-       ============================================ */
-    .quick-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      position: relative;
-      z-index: 1;
-    }
+    /* Quick Add & Presets */
+    .quick-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; position: relative; z-index: 1; }
     .pill-btn {
-      padding: 8px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(168,85,247,0.25);
-      background: rgba(168,85,247,0.08);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      letter-spacing: 0.5px;
+      padding: 8px 18px; border-radius: 999px; border: 1px solid rgba(168,85,247,0.25);
+      background: rgba(168,85,247,0.08); color: var(--text); font-family: inherit;
+      font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px;
     }
     .pill-btn:hover {
-      background: rgba(168,85,247,0.18);
-      border-color: rgba(168,85,247,0.5);
-      box-shadow: 0 0 15px rgba(168,85,247,0.2);
-      transform: translateY(-2px);
+      background: rgba(168,85,247,0.18); border-color: rgba(168,85,247,0.5);
+      box-shadow: 0 0 15px rgba(168,85,247,0.2); transform: translateY(-2px);
     }
 
-    /* Presets section */
-    #presets-area {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      align-items: center;
-    }
-    #presets-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      justify-content: center;
-    }
-    #presets-label {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
+    #presets-area { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+    #presets-header { display: flex; align-items: center; gap: 10px; width: 100%; justify-content: center; }
+    #presets-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
     .preset-btn {
-      position: relative;
-      padding: 10px 16px;
-      border-radius: 12px;
-      border: 1px solid var(--glass-border);
-      background: rgba(255,255,255,0.03);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      min-width: 100px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+      position: relative; padding: 10px 16px; border-radius: 12px;
+      border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03);
+      color: var(--text); font-family: inherit; font-size: 0.8rem;
+      cursor: pointer; transition: all 0.3s ease; min-width: 100px;
+      text-align: center; display: flex; flex-direction: column; gap: 2px;
     }
-    .preset-btn:hover {
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(168,85,247,0.3);
-    }
-    .preset-btn .preset-name {
-      font-weight: 600;
-      font-size: 0.8rem;
-    }
-    .preset-btn .preset-time {
-      font-size: 0.7rem;
-      color: var(--text-dim);
-    }
+    .preset-btn:hover { background: rgba(255,255,255,0.06); border-color: rgba(168,85,247,0.3); }
+    .preset-btn .preset-name { font-weight: 600; font-size: 0.8rem; }
+    .preset-btn .preset-time { font-size: 0.7rem; color: var(--text-dim); }
     .preset-edit {
-      position: absolute;
-      top: 4px; right: 4px;
-      width: 18px; height: 18px;
-      border-radius: 4px;
-      border: none;
-      background: rgba(255,255,255,0.08);
-      color: var(--text-dim);
-      font-size: 0.65rem;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: absolute; top: 4px; right: 4px; width: 18px; height: 18px;
+      border-radius: 4px; border: none; background: rgba(255,255,255,0.08);
+      color: var(--text-dim); font-size: 0.65rem; cursor: pointer; opacity: 0;
+      transition: opacity 0.2s; display: flex; align-items: center; justify-content: center;
     }
     .preset-btn:hover .preset-edit { opacity: 1; }
     .preset-edit:hover { background: var(--primary); color: #fff; }
 
-    /* ============================================
-       CONTROLS
-       ============================================ */
-    .controls {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      position: relative;
-      z-index: 1;
-    }
-    .btn-row {
-      display: flex;
-      gap: 12px;
-    }
+    /* Controls */
+    .controls { display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 1; }
+    .btn-row { display: flex; gap: 12px; }
     .btn {
-      padding: 16px 24px;
-      border-radius: 16px;
-      border: none;
-      font-family: inherit;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      flex: 1;
+      padding: 16px 24px; border-radius: 16px; border: none; font-family: inherit;
+      font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+      letter-spacing: 1px; display: flex; align-items: center; justify-content: center;
+      gap: 8px; flex: 1;
     }
     .btn-primary {
       background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-      color: #fff;
-      border: 1px solid rgba(168,85,247,0.4);
+      color: #fff; border: 1px solid rgba(168,85,247,0.4);
       box-shadow: 0 0 25px rgba(168,85,247,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
     }
     .btn-primary:hover {
@@ -521,57 +250,35 @@
     .btn-primary:active { transform: translateY(0) scale(0.98); }
 
     .btn-secondary {
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.05); color: var(--text);
+      border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
     }
     .btn-secondary:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(34,211,238,0.3);
-      box-shadow: 0 0 20px rgba(34,211,238,0.1);
-      transform: translateY(-2px);
+      background: rgba(255,255,255,0.1); border-color: rgba(34,211,238,0.3);
+      box-shadow: 0 0 20px rgba(34,211,238,0.1); transform: translateY(-2px);
     }
     .btn-full { width: 100%; }
     .hidden { display: none !important; }
 
-    /* ============================================
-       STOPWATCH & LAPS
-       ============================================ */
+    /* Stopwatch */
     #stopwatch-display {
-      font-size: 3.2rem;
-      font-weight: 700;
-      letter-spacing: 3px;
-      color: #fff;
+      font-size: 3.4rem; font-weight: 700; letter-spacing: 4px; color: #fff;
       text-shadow: 0 0 12px rgba(34,211,238,0.4), 0 0 40px rgba(34,211,238,0.15);
-      text-align: center;
-      line-height: 1;
+      text-align: center; line-height: 1;
     }
-    .ms-digits {
-      font-size: 0.5em;
-      color: var(--secondary);
-      margin-left: 4px;
-    }
+    .ms-digits { font-size: 0.5em; color: var(--secondary); margin-left: 4px; }
 
     #laps-container {
-      max-height: 200px;
-      overflow-y: auto;
-      border-radius: 16px;
-      background: rgba(0,0,0,0.2);
-      border: 1px solid var(--glass-border);
-      padding: 8px;
+      max-height: 200px; overflow-y: auto; border-radius: 16px;
+      background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); padding: 8px;
     }
     #laps-container::-webkit-scrollbar { width: 6px; }
     #laps-container::-webkit-scrollbar-track { background: transparent; }
     #laps-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
     
     .lap-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      transition: background 0.2s;
+      display: flex; justify-content: space-between; padding: 8px 12px;
+      border-radius: 10px; font-size: 0.85rem; transition: background 0.2s;
     }
     .lap-row:hover { background: rgba(255,255,255,0.03); }
     .lap-row.fastest { color: var(--success); background: rgba(52,211,153,0.06); }
@@ -580,81 +287,42 @@
     .lap-split { font-weight: 600; }
     .lap-total { color: var(--text-dim); font-size: 0.8rem; }
 
-    #laps-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 8px;
-      margin-bottom: 4px;
-    }
-    #laps-title {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
+    #laps-header { display: flex; justify-content: space-between; align-items: center; padding: 0 8px; margin-bottom: 4px; }
+    #laps-title { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
     #clear-laps {
-      font-size: 0.7rem;
-      padding: 4px 10px;
-      border-radius: 8px;
-      border: 1px solid var(--glass-border);
-      background: transparent;
-      color: var(--text-dim);
-      cursor: pointer;
-      font-family: inherit;
+      font-size: 0.7rem; padding: 4px 10px; border-radius: 8px;
+      border: 1px solid var(--glass-border); background: transparent;
+      color: var(--text-dim); cursor: pointer; font-family: inherit;
     }
     #clear-laps:hover { color: var(--danger); border-color: var(--danger); }
 
-    /* ============================================
-       COMPLETION OVERLAY
-       ============================================ */
+    /* Completion Overlay */
     #completion-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      background: rgba(10,10,15,0.85);
-      backdrop-filter: blur(12px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 24px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(10,10,15,0.85); backdrop-filter: blur(12px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 24px; opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
     }
-    #completion-overlay.show {
-      opacity: 1;
-      pointer-events: all;
-    }
+    #completion-overlay.show { opacity: 1; pointer-events: all; }
     #completion-message {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: #fff;
+      font-size: 2.5rem; font-weight: 900; color: #fff;
       text-shadow: 0 0 30px rgba(168,85,247,0.6), 0 0 60px rgba(34,211,238,0.3);
-      text-align: center;
-      animation: pulse-glow 1.5s ease-in-out infinite;
+      text-align: center; animation: pulse-glow 1.5s ease-in-out infinite;
     }
-    #completion-sub {
-      color: var(--text-dim);
-      font-size: 1rem;
-      letter-spacing: 2px;
-    }
+    #completion-sub { color: var(--text-dim); font-size: 1rem; letter-spacing: 2px; }
 
-    /* ============================================
-       RESPONSIVE
-       ============================================ */
+    /* Responsive */
     @media (max-width: 640px) {
       #card { padding: 24px 20px; border-radius: 20px; }
-      #time-display { font-size: 2.6rem; letter-spacing: 2px; }
+      #time-display { font-size: 2.8rem; letter-spacing: 3px; gap: 4px; }
       #stopwatch-display { font-size: 2.2rem; }
-      #progress-container { width: 240px; height: 240px; }
       .btn { padding: 14px 20px; font-size: 0.95rem; }
       .pill-btn { padding: 6px 14px; font-size: 0.8rem; }
       #completion-message { font-size: 1.8rem; }
+      .display-area { padding: 12px 0; }
     }
     @media (max-width: 380px) {
-      #time-display { font-size: 2rem; }
+      #time-display { font-size: 2.2rem; letter-spacing: 2px; }
       #stopwatch-display { font-size: 1.8rem; }
       .preset-btn { min-width: 80px; padding: 8px 10px; }
     }
@@ -662,35 +330,18 @@
 </head>
 <body>
 
-  <!-- Background Effects -->
   <div id="starfield"></div>
   <div class="nebula nebula-1"></div>
   <div class="nebula nebula-2"></div>
   <div class="nebula nebula-3"></div>
   <div id="scanlines"></div>
 
-  <!-- SVG Gradients (hidden) -->
-  <svg width="0" height="0" style="position:absolute;">
-    <defs>
-      <linearGradient id="gradientPrimary" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#22d3ee" />
-        <stop offset="100%" stop-color="#a855f7" />
-      </linearGradient>
-      <linearGradient id="gradientWarning" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#f97316" />
-        <stop offset="100%" stop-color="#ef4444" />
-      </linearGradient>
-    </defs>
-  </svg>
-
-  <!-- Completion Overlay -->
   <div id="completion-overlay">
     <div id="completion-message">Time is Up! 🚀</div>
     <div id="completion-sub">Mission elapsed</div>
     <button class="btn btn-primary" style="max-width: 200px;" onclick="dismissCompletion()">Dismiss</button>
   </div>
 
-  <!-- Top Bar -->
   <div id="top-bar">
     <div id="dashboard-clock">00:00:00</div>
     <div id="top-actions">
@@ -699,11 +350,9 @@
     </div>
   </div>
 
-  <!-- Main App -->
   <div id="app">
     <div id="card">
       
-      <!-- Tabs -->
       <div id="tabs">
         <button class="tab active" data-tab="timer" onclick="switchTab('timer')">
           <span>⏱</span> Timer
@@ -716,26 +365,16 @@
       <!-- TIMER VIEW -->
       <div id="timer-view">
         <div class="display-area">
-          <!-- Circular Progress -->
-          <div id="progress-container">
-            <svg id="progress-svg" width="280" height="280" viewBox="0 0 280 280">
-              <circle class="progress-track" cx="140" cy="140" r="130"/>
-              <circle class="progress-ring" id="progress-circle" cx="140" cy="140" r="130"
-                stroke-dasharray="816.8" stroke-dashoffset="0"/>
-            </svg>
-            <!-- Time Display -->
-            <div id="time-display">
-              <input type="number" class="time-segment" id="h" min="0" max="99" value="00">
-              <span class="time-separator">:</span>
-              <input type="number" class="time-segment" id="m" min="0" max="59" value="05">
-              <span class="time-separator">:</span>
-              <input type="number" class="time-segment" id="s" min="0" max="59" value="00">
-            </div>
+          <div id="time-display">
+            <input type="number" class="time-segment" id="h" min="0" max="99" value="00">
+            <span class="time-separator">:</span>
+            <input type="number" class="time-segment" id="m" min="0" max="59" value="05">
+            <span class="time-separator">:</span>
+            <input type="number" class="time-segment" id="s" min="0" max="59" value="00">
           </div>
           <div id="time-underline"></div>
         </div>
 
-        <!-- Quick Add -->
         <div class="quick-actions">
           <button class="pill-btn" onclick="addTime(30)">+0:30</button>
           <button class="pill-btn" onclick="addTime(60)">+1:00</button>
@@ -743,17 +382,13 @@
           <button class="pill-btn" onclick="addTime(600)">+10:00</button>
         </div>
 
-        <!-- Presets -->
         <div id="presets-area">
           <div id="presets-header">
             <span id="presets-label">Presets</span>
           </div>
-          <div class="quick-actions" id="presets-list">
-            <!-- Populated by JS -->
-          </div>
+          <div class="quick-actions" id="presets-list"></div>
         </div>
 
-        <!-- Timer Controls -->
         <div class="controls">
           <button id="btn-timer-start" class="btn btn-primary btn-full" onclick="toggleTimer()">▶ START</button>
           <div id="timer-controls-active" class="btn-row hidden">
@@ -772,7 +407,6 @@
           <div id="time-underline"></div>
         </div>
 
-        <!-- Stopwatch Controls -->
         <div class="controls">
           <button id="btn-sw-start" class="btn btn-primary btn-full" onclick="toggleStopwatch()">▶ START</button>
           <div id="sw-controls-active" class="btn-row hidden">
@@ -785,7 +419,6 @@
           </div>
         </div>
 
-        <!-- Laps -->
         <div id="laps-area">
           <div id="laps-header">
             <span id="laps-title">Lap History</span>
@@ -801,62 +434,31 @@
   </div>
 
   <script>
-    /* ============================================
-       STATE & STORAGE
-       ============================================ */
     const storage = {
       getMute: () => localStorage.getItem('cosmos_mute') === 'true',
       setMute: v => localStorage.setItem('cosmos_mute', v),
-      getPresets: () => {
-        try { return JSON.parse(localStorage.getItem('cosmos_presets')) || []; } 
-        catch { return []; }
-      },
+      getPresets: () => { try { return JSON.parse(localStorage.getItem('cosmos_presets')) || []; } catch { return []; } },
       setPresets: v => localStorage.setItem('cosmos_presets', JSON.stringify(v)),
-      getLastTimer: () => {
-        const v = parseInt(localStorage.getItem('cosmos_lastTimer'));
-        return isNaN(v) ? 300 : v;
-      },
+      getLastTimer: () => { const v = parseInt(localStorage.getItem('cosmos_lastTimer')); return isNaN(v) ? 300 : v; },
       setLastTimer: v => localStorage.setItem('cosmos_lastTimer', v),
     };
 
     let muted = storage.getMute();
     let activeTab = 'timer';
 
-    // Timer state
-    const timer = {
-      total: 300,
-      remaining: 300,
-      status: 'idle', // idle | running | paused
-      interval: null,
-      endTime: 0,
-    };
+    const timer = { total: 300, remaining: 300, status: 'idle', interval: null, endTime: 0 };
+    const stopwatch = { startTime: 0, elapsed: 0, status: 'idle', raf: null, laps: [] };
 
-    // Stopwatch state
-    const stopwatch = {
-      startTime: 0,
-      elapsed: 0,
-      status: 'idle',
-      raf: null,
-      laps: [],
-    };
-
-    /* ============================================
-       DOM REFERENCES
-       ============================================ */
     const els = {
-      h: document.getElementById('h'),
-      m: document.getElementById('m'),
-      s: document.getElementById('s'),
+      h: document.getElementById('h'), m: document.getElementById('m'), s: document.getElementById('s'),
       timeDisplay: document.getElementById('time-display'),
-      progressCircle: document.getElementById('progress-circle'),
       btnTimerStart: document.getElementById('btn-timer-start'),
       timerControlsActive: document.getElementById('timer-controls-active'),
       btnMute: document.getElementById('btn-mute'),
       dashboardClock: document.getElementById('dashboard-clock'),
       completionOverlay: document.getElementById('completion-overlay'),
       presetsList: document.getElementById('presets-list'),
-      swTime: document.getElementById('sw-time'),
-      swMs: document.getElementById('sw-ms'),
+      swTime: document.getElementById('sw-time'), swMs: document.getElementById('sw-ms'),
       btnSwStart: document.getElementById('btn-sw-start'),
       swControlsActive: document.getElementById('sw-controls-active'),
       swControlsPaused: document.getElementById('sw-controls-paused'),
@@ -864,11 +466,6 @@
       lapsArea: document.getElementById('laps-area'),
     };
 
-    const CIRCUMFERENCE = 2 * Math.PI * 130; // r=130
-
-    /* ============================================
-       INITIALIZATION
-       ============================================ */
     function init() {
       createStarfield();
       startShootingStars();
@@ -880,18 +477,11 @@
       setupInputs();
       setupKeyboard();
       setupWheel();
-      
-      // Request notification permission on first interaction
       document.body.addEventListener('click', () => {
-        if ('Notification' in window && Notification.permission === 'default') {
-          Notification.requestPermission();
-        }
+        if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
       }, { once: true });
     }
 
-    /* ============================================
-       BACKGROUND EFFECTS
-       ============================================ */
     function createStarfield() {
       const container = document.getElementById('starfield');
       for (let i = 0; i < 200; i++) {
@@ -921,30 +511,18 @@
       setTimeout(trigger, 3000);
     }
 
-    /* ============================================
-       DASHBOARD CLOCK
-       ============================================ */
     function updateClock() {
-      const now = new Date();
-      els.dashboardClock.textContent = now.toLocaleTimeString('en-GB', { hour12: false });
+      els.dashboardClock.textContent = new Date().toLocaleTimeString('en-GB', { hour12: false });
     }
 
-    /* ============================================
-       TAB SWITCHING
-       ============================================ */
     function switchTab(tab) {
       activeTab = tab;
       document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
       document.getElementById('timer-view').classList.toggle('hidden', tab !== 'timer');
       document.getElementById('stopwatch-view').classList.toggle('hidden', tab !== 'stopwatch');
-      if (tab === 'stopwatch') {
-        els.lapsArea.style.display = stopwatch.laps.length ? 'block' : 'none';
-      }
+      if (tab === 'stopwatch') els.lapsArea.style.display = stopwatch.laps.length ? 'block' : 'none';
     }
 
-    /* ============================================
-       TIMER LOGIC
-       ============================================ */
     function getInputSeconds() {
       const h = parseInt(els.h.value) || 0;
       const m = Math.min(59, parseInt(els.m.value) || 0);
@@ -963,25 +541,19 @@
 
     function loadTimerFromStorage() {
       const secs = storage.getLastTimer();
-      timer.total = secs;
-      timer.remaining = secs;
+      timer.total = secs; timer.remaining = secs;
       setInputSeconds(secs);
-      updateProgressRing();
     }
 
     function saveTimerToStorage() {
-      if (timer.status === 'idle') {
-        storage.setLastTimer(getInputSeconds());
-      }
+      if (timer.status === 'idle') storage.setLastTimer(getInputSeconds());
     }
 
     function addTime(seconds) {
       if (timer.status !== 'idle') return;
-      let current = getInputSeconds();
-      current += seconds;
+      let current = getInputSeconds() + seconds;
       setInputSeconds(current);
       saveTimerToStorage();
-      updateProgressRing();
     }
 
     function toggleTimer() {
@@ -997,11 +569,7 @@
       }
       timer.status = 'running';
       timer.endTime = Date.now() + timer.remaining * 1000;
-      
-      // Lock inputs
       [els.h, els.m, els.s].forEach(i => i.disabled = true);
-      
-      // UI updates
       els.timeDisplay.classList.add('running');
       els.btnTimerStart.classList.add('hidden');
       els.timerControlsActive.classList.remove('hidden');
@@ -1012,12 +580,10 @@
         if (rem <= 0) {
           timer.remaining = 0;
           updateTimerDisplay();
-          updateProgressRing();
           completeTimer();
         } else {
           timer.remaining = rem;
           updateTimerDisplay();
-          updateProgressRing();
           checkWarning();
         }
       }, 100);
@@ -1037,9 +603,7 @@
       clearInterval(timer.interval);
       timer.remaining = timer.total;
       updateTimerDisplay();
-      updateProgressRing();
       els.timeDisplay.classList.remove('running', 'warning', 'flash');
-      els.progressCircle.classList.remove('warning');
       [els.h, els.m, els.s].forEach(i => i.disabled = false);
       els.btnTimerStart.textContent = '▶ START';
       els.btnTimerStart.classList.remove('hidden');
@@ -1055,8 +619,6 @@
       els.timerControlsActive.classList.add('hidden');
       els.timeDisplay.classList.add('flash');
       els.timeDisplay.classList.remove('running', 'warning');
-      els.progressCircle.classList.remove('warning');
-      
       playAlarm();
       showNotification('⏰ Time is up!', 'Your countdown has reached zero.');
       els.completionOverlay.classList.add('show');
@@ -1068,30 +630,15 @@
       resetTimer();
     }
 
-    function updateTimerDisplay() {
-      setInputSeconds(timer.remaining);
-    }
-
-    function updateProgressRing() {
-      const pct = timer.total > 0 ? (timer.remaining / timer.total) * 100 : 0;
-      const offset = CIRCUMFERENCE - (pct / 100) * CIRCUMFERENCE;
-      els.progressCircle.style.strokeDashoffset = offset;
-    }
+    function updateTimerDisplay() { setInputSeconds(timer.remaining); }
 
     function checkWarning() {
       const pct = timer.total > 0 ? timer.remaining / timer.total : 1;
-      if (pct <= 0.1 && timer.remaining > 0) {
-        els.timeDisplay.classList.add('warning');
-        els.progressCircle.classList.add('warning');
-      } else {
-        els.timeDisplay.classList.remove('warning');
-        els.progressCircle.classList.remove('warning');
-      }
+      if (pct <= 0.1 && timer.remaining > 0) els.timeDisplay.classList.add('warning');
+      else els.timeDisplay.classList.remove('warning');
     }
 
-    /* ============================================
-       STOPWATCH LOGIC
-       ============================================ */
+    /* Stopwatch */
     function toggleStopwatch() {
       if (stopwatch.status === 'running') pauseStopwatch();
       else startStopwatch();
@@ -1100,11 +647,9 @@
     function startStopwatch() {
       stopwatch.status = 'running';
       stopwatch.startTime = Date.now() - stopwatch.elapsed;
-      
       els.btnSwStart.classList.add('hidden');
       els.swControlsActive.classList.remove('hidden');
       els.swControlsPaused.classList.add('hidden');
-      
       function tick() {
         if (stopwatch.status !== 'running') return;
         stopwatch.elapsed = Date.now() - stopwatch.startTime;
@@ -1145,36 +690,18 @@
     function recordLap() {
       if (stopwatch.status !== 'running') return;
       const lastTotal = stopwatch.laps.length > 0 ? stopwatch.laps[stopwatch.laps.length - 1].total : 0;
-      const split = stopwatch.elapsed - lastTotal;
-      stopwatch.laps.push({
-        number: stopwatch.laps.length + 1,
-        split,
-        total: stopwatch.elapsed,
-      });
+      stopwatch.laps.push({ number: stopwatch.laps.length + 1, split: stopwatch.elapsed - lastTotal, total: stopwatch.elapsed });
       renderLaps();
       els.lapsArea.style.display = 'block';
     }
 
     function renderLaps() {
-      if (!stopwatch.laps.length) {
-        els.lapsList.innerHTML = '';
-        return;
-      }
+      if (!stopwatch.laps.length) { els.lapsList.innerHTML = ''; return; }
       const splits = stopwatch.laps.map(l => l.split);
-      const minSplit = Math.min(...splits);
-      const maxSplit = Math.max(...splits);
-      
+      const minSplit = Math.min(...splits), maxSplit = Math.max(...splits);
       els.lapsList.innerHTML = stopwatch.laps.slice().reverse().map(lap => {
-        const isFastest = lap.split === minSplit && stopwatch.laps.length > 1;
-        const isSlowest = lap.split === maxSplit && stopwatch.laps.length > 1;
-        const cls = isFastest ? 'fastest' : isSlowest ? 'slowest' : '';
-        return `
-          <div class="lap-row ${cls}">
-            <span class="lap-num">#${String(lap.number).padStart(2,'0')}</span>
-            <span class="lap-split">${formatMs(lap.split)}</span>
-            <span class="lap-total">${formatMs(lap.total)}</span>
-          </div>
-        `;
+        const cls = lap.split === minSplit && stopwatch.laps.length > 1 ? 'fastest' : lap.split === maxSplit && stopwatch.laps.length > 1 ? 'slowest' : '';
+        return `<div class="lap-row ${cls}"><span class="lap-num">#${String(lap.number).padStart(2,'0')}</span><span class="lap-split">${formatMs(lap.split)}</span><span class="lap-total">${formatMs(lap.total)}</span></div>`;
       }).join('');
     }
 
@@ -1188,27 +715,18 @@
       return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(milli).padStart(2,'0')}`;
     }
 
-    function clearLaps() {
-      stopwatch.laps = [];
-      renderLaps();
-      els.lapsArea.style.display = 'none';
-    }
+    function clearLaps() { stopwatch.laps = []; renderLaps(); els.lapsArea.style.display = 'none'; }
 
-    /* ============================================
-       PRESETS
-       ============================================ */
+    /* Presets */
     function renderPresets() {
       const presets = storage.getPresets();
-      // Ensure 3 slots
       while (presets.length < 3) presets.push({ name: `Preset ${presets.length + 1}`, seconds: 0 });
-      
       els.presetsList.innerHTML = presets.map((p, i) => `
         <button class="preset-btn" onclick="loadPreset(${i})">
           <span class="preset-name">${escapeHtml(p.name)}</span>
           <span class="preset-time">${formatDuration(p.seconds)}</span>
           <span class="preset-edit" onclick="event.stopPropagation(); savePreset(${i})">✎</span>
-        </button>
-      `).join('');
+        </button>`).join('');
     }
 
     function loadPreset(index) {
@@ -1218,7 +736,6 @@
         setInputSeconds(presets[index].seconds);
         timer.total = presets[index].seconds;
         timer.remaining = presets[index].seconds;
-        updateProgressRing();
         saveTimerToStorage();
       }
     }
@@ -1227,46 +744,26 @@
       const presets = storage.getPresets();
       const name = prompt('Name this preset:', presets[index]?.name || `Preset ${index + 1}`);
       if (name === null) return;
-      const seconds = getInputSeconds();
-      presets[index] = { name: name.trim() || `Preset ${index + 1}`, seconds };
+      presets[index] = { name: name.trim() || `Preset ${index + 1}`, seconds: getInputSeconds() };
       storage.setPresets(presets);
       renderPresets();
     }
 
     function formatDuration(sec) {
       if (sec <= 0) return '--:--';
-      const h = Math.floor(sec / 3600);
-      const m = Math.floor((sec % 3600) / 60);
-      const s = sec % 60;
+      const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
       if (h > 0) return `${h}h ${m}m`;
       if (m > 0) return `${m}m ${s}s`;
       return `${s}s`;
     }
 
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
+    function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
 
-    /* ============================================
-       INPUT HANDLING
-       ============================================ */
+    /* Inputs */
     function setupInputs() {
       [els.h, els.m, els.s].forEach(input => {
-        input.addEventListener('change', () => {
-          clampInput(input);
-          saveTimerToStorage();
-          if (timer.status === 'idle') {
-            timer.total = getInputSeconds();
-            timer.remaining = timer.total;
-            updateProgressRing();
-          }
-        });
-        input.addEventListener('blur', () => {
-          clampInput(input);
-          input.value = String(parseInt(input.value) || 0).padStart(2, '0');
-        });
+        input.addEventListener('change', () => { clampInput(input); saveTimerToStorage(); if (timer.status === 'idle') { timer.total = getInputSeconds(); timer.remaining = timer.total; } });
+        input.addEventListener('blur', () => { clampInput(input); input.value = String(parseInt(input.value) || 0).padStart(2, '0'); });
         input.addEventListener('focus', () => input.select());
       });
     }
@@ -1283,101 +780,59 @@
         input.addEventListener('wheel', (e) => {
           if (timer.status !== 'idle') return;
           e.preventDefault();
-          let v = parseInt(input.value) || 0;
-          v += e.deltaY < 0 ? 1 : -1;
+          let v = (parseInt(input.value) || 0) + (e.deltaY < 0 ? 1 : -1);
           if (input.id !== 'h') v = Math.max(0, Math.min(59, v));
           else v = Math.max(0, Math.min(99, v));
           input.value = String(v).padStart(2, '0');
           saveTimerToStorage();
-          timer.total = getInputSeconds();
-          timer.remaining = timer.total;
-          updateProgressRing();
+          timer.total = getInputSeconds(); timer.remaining = timer.total;
         }, { passive: false });
       });
     }
 
-    /* ============================================
-       KEYBOARD SHORTCUTS
-       ============================================ */
+    /* Keyboard */
     function setupKeyboard() {
       document.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT' && e.target.classList.contains('time-segment')) {
           if (e.key === 'Enter') e.target.blur();
           return;
         }
-        if (e.code === 'Space') {
-          e.preventDefault();
-          if (activeTab === 'timer') toggleTimer();
-          else toggleStopwatch();
-        }
-        if (e.code === 'KeyR') {
-          e.preventDefault();
-          if (activeTab === 'timer') resetTimer();
-          else resetStopwatch();
-        }
-        if (e.code === 'KeyL' && activeTab === 'stopwatch') {
-          e.preventDefault();
-          recordLap();
-        }
+        if (e.code === 'Space') { e.preventDefault(); activeTab === 'timer' ? toggleTimer() : toggleStopwatch(); }
+        if (e.code === 'KeyR') { e.preventDefault(); activeTab === 'timer' ? resetTimer() : resetStopwatch(); }
+        if (e.code === 'KeyL' && activeTab === 'stopwatch') { e.preventDefault(); recordLap(); }
       });
     }
 
-    /* ============================================
-       SOUND & NOTIFICATIONS
-       ============================================ */
+    /* Sound */
     function playAlarm() {
       if (muted) return;
       try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const ctx = new AudioContext();
         const now = ctx.currentTime;
-        
-        // Spacey descending chime
         [880, 660, 440].forEach((freq, i) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + i * 0.25);
+          const osc = ctx.createOscillator(), gain = ctx.createGain();
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.type = 'sine'; osc.frequency.setValueAtTime(freq, now + i * 0.25);
           gain.gain.setValueAtTime(0.15, now + i * 0.25);
           gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.25 + 0.6);
-          osc.start(now + i * 0.25);
-          osc.stop(now + i * 0.25 + 0.6);
+          osc.start(now + i * 0.25); osc.stop(now + i * 0.25 + 0.6);
         });
-      } catch (e) { console.log('Audio play failed', e); }
+      } catch (e) {}
     }
 
     function showNotification(title, body) {
-      if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification(title, { body, icon: '' });
-      }
+      if ('Notification' in window && Notification.permission === 'granted') new Notification(title, { body });
     }
 
-    /* ============================================
-       TOGGLES
-       ============================================ */
-    els.btnMute.addEventListener('click', () => {
-      muted = !muted;
-      storage.setMute(muted);
-      updateMuteIcon();
-    });
-
-    function updateMuteIcon() {
-      els.btnMute.textContent = muted ? '🔇' : '🔊';
-    }
-
+    /* Toggles */
+    els.btnMute.addEventListener('click', () => { muted = !muted; storage.setMute(muted); updateMuteIcon(); });
+    function updateMuteIcon() { els.btnMute.textContent = muted ? '🔇' : '🔊'; }
     document.getElementById('btn-fullscreen').addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
-      } else {
-        document.exitFullscreen().catch(() => {});
-      }
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+      else document.exitFullscreen().catch(() => {});
     });
 
-    /* ============================================
-       START
-       ============================================ */
     init();
   </script>
 </body>
