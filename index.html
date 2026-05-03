@@ -214,9 +214,16 @@
       flex-direction: column; 
       gap: 10px; 
       align-items: center; 
-      margin-top: 16px;   /* ← 加咗呢行：preset 向下移 */
+      margin-top: 24px;   /* ← 由 16px 加到 24px，整個 preset 區域向下移 */
     }
-    #presets-header { display: flex; align-items: center; gap: 10px; width: 100%; justify-content: center; }
+    #presets-header { 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      width: 100%; 
+      justify-content: center; 
+      margin-top: 8px;   /* ← 加咗呢行：PRESETS label 再向下移少少 */
+    }
     #presets-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
     .preset-btn {
       position: relative; padding: 10px 16px; border-radius: 12px;
@@ -333,6 +340,8 @@
       #completion-message { font-size: 1.8rem; }
       .display-area { padding: 12px 0; }
       .controls { margin-top: 24px; }
+      #presets-area { margin-top: 20px; }   /* ← 手機版同步加大 */
+      #presets-header { margin-top: 6px; }   /* ← 手機版同步加大 */
     }
     @media (max-width: 380px) {
       #time-display { font-size: 2.2rem; letter-spacing: 2px; }
