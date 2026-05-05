@@ -7,22 +7,22 @@
   "theme_color": "#2b8cff",
   "icons": [
     {
-      "src": "/To-Do-List/icons/icon-180@3x.png",
+      "src": "/To-Do-List/icons/icon-180.png",
       "sizes": "180x180",
       "type": "image/png"
     },
     {
-      "src": "/To-Do-List/icons/icon-120@2x.png",
+      "src": "/To-Do-List/icons/icon-120.png",
       "sizes": "120x120",
       "type": "image/png"
     },
     {
-      "src": "/To-Do-List/icons/icon-152@2x.png",
+      "src": "/To-Do-List/icons/icon-152.png",
       "sizes": "152x152",
       "type": "image/png"
     },
     {
-      "src": "/To-Do-List/icons/icon-167@2x.png",
+      "src": "/To-Do-List/icons/icon-167.png",
       "sizes": "167x167",
       "type": "image/png"
     },
@@ -30,7 +30,13 @@
       "src": "/To-Do-List/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/To-Do-List/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
