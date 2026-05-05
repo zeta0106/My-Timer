@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Focus Tasks</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
@@ -639,12 +638,12 @@
         .streak-label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
         .streak-divider { width: 1px; height: 40px; background: var(--text-tertiary); }
 
-        /* ====== COSMOS TIMER MODAL ====== */
+        /* ====== FOCUS TIMER MODAL (White Theme) ====== */
         .cosmos-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(10, 10, 15, 0.92);
+            background: var(--bg-primary);
             backdrop-filter: blur(12px);
             display: flex;
             align-items: center;
@@ -660,89 +659,19 @@
             pointer-events: all;
         }
 
-        .cosmos-overlay #cosmos-starfield {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .cosmos-overlay .star {
-            position: absolute;
-            background: #fff;
-            border-radius: 50%;
-            opacity: 0;
-            animation: cosmos-twinkle var(--duration, 3s) ease-in-out infinite;
-            animation-delay: var(--delay, 0s);
-        }
-
-        @keyframes cosmos-twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        .cosmos-overlay .nebula {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.12;
-        }
-
-        .cosmos-overlay .nebula-1 {
-            width: 60vw; height: 60vw;
-            max-width: 600px; max-height: 600px;
-            background: radial-gradient(circle, #7B2FBE 0%, transparent 70%);
-            top: -15%; left: -15%;
-            animation: cosmos-drift 25s ease-in-out infinite alternate;
-        }
-
-        .cosmos-overlay .nebula-2 {
-            width: 50vw; height: 50vw;
-            max-width: 500px; max-height: 500px;
-            background: radial-gradient(circle, #22d3ee 0%, transparent 70%);
-            bottom: -20%; right: -15%;
-            animation: cosmos-drift 30s ease-in-out infinite alternate-reverse;
-        }
-
-        @keyframes cosmos-drift {
-            from { transform: translate(0, 0) scale(1); }
-            to { transform: translate(30px, -30px) scale(1.1); }
-        }
-
-        .cosmos-overlay .shooting-star {
-            position: absolute;
-            width: 120px; height: 2px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.9), transparent);
-            border-radius: 2px;
-            transform: rotate(-35deg);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 1;
-            animation: cosmos-shoot 1.2s ease-out forwards;
-        }
-
-        @keyframes cosmos-shoot {
-            0% { opacity: 1; transform: translateX(0) translateY(0) rotate(-35deg); }
-            100% { opacity: 0; transform: translateX(400px) translateY(300px) rotate(-35deg); }
-        }
-
         .cosmos-card {
             position: relative;
             z-index: 10;
             width: 100%;
             max-width: 520px;
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 28px;
-            padding: 36px 32px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06), 0 0 80px rgba(168,85,247,0.08);
+            background: var(--bg-card);
+            border: 1px solid var(--text-tertiary);
+            border-radius: var(--radius-lg);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-lg);
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 28px;
             overflow: hidden;
             transform: scale(0.9);
             transition: transform 0.4s ease;
@@ -752,41 +681,28 @@
             transform: scale(1);
         }
 
-        .cosmos-card::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle at center, rgba(168,85,247,0.03) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
         .cosmos-header {
             text-align: center;
-            position: relative;
-            z-index: 1;
         }
 
         .cosmos-header h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: #fff;
-            letter-spacing: 2px;
+            color: var(--text-primary);
             margin-bottom: 6px;
         }
 
         .cosmos-header p {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            letter-spacing: 1px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
         .cosmos-task-name {
-            font-size: 0.9rem;
-            color: #a855f7;
-            margin-top: 8px;
-            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--accent);
+            margin-top: 10px;
+            font-weight: 600;
             max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -798,31 +714,28 @@
             flex-direction: column;
             align-items: center;
             gap: 16px;
-            position: relative;
-            z-index: 1;
-            padding: 16px 0;
+            padding: 20px 0;
         }
 
         .cosmos-time-display {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 4rem;
             font-weight: 700;
-            letter-spacing: 6px;
-            color: #fff;
-            text-shadow: 0 0 12px rgba(34,211,238,0.4), 0 0 40px rgba(34,211,238,0.15);
+            letter-spacing: 4px;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             line-height: 1;
         }
 
         .cosmos-time-display.running {
+            color: var(--accent);
             animation: cosmos-pulse-glow 2s ease-in-out infinite;
         }
 
         .cosmos-time-display.warning {
-            color: #f97316;
-            text-shadow: 0 0 12px rgba(249,115,22,0.6), 0 0 40px rgba(249,115,22,0.3);
+            color: var(--danger);
             animation: cosmos-pulse-glow 0.5s ease-in-out infinite;
         }
 
@@ -830,11 +743,14 @@
             animation: cosmos-flash-red 0.4s ease-in-out 3;
         }
 
-        @keyframes cosmos-pulse-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.75; } }
+        @keyframes cosmos-pulse-glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
 
         @keyframes cosmos-flash-red {
-            0%, 100% { color: #fff; text-shadow: 0 0 12px rgba(34,211,238,0.4); }
-            50% { color: #ef4444; text-shadow: 0 0 20px rgba(239,68,68,0.8); }
+            0%, 100% { color: var(--text-primary); }
+            50% { color: var(--danger); }
         }
 
         .cosmos-time-segment {
@@ -845,15 +761,15 @@
             font: inherit;
             text-align: center;
             padding: 8px 4px;
-            border-radius: 10px;
+            border-radius: var(--radius-sm);
             transition: all 0.3s ease;
             outline: none;
-            caret-color: #22d3ee;
+            caret-color: var(--accent);
         }
 
         .cosmos-time-segment:focus {
-            background: rgba(34,211,238,0.08);
-            box-shadow: 0 0 0 2px rgba(34,211,238,0.3), 0 0 20px rgba(34,211,238,0.15);
+            background: var(--accent-light);
+            box-shadow: 0 0 0 3px var(--accent-light);
         }
 
         .cosmos-time-segment:disabled { opacity: 1; cursor: default; }
@@ -861,14 +777,18 @@
         .cosmos-time-segment::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .cosmos-time-segment { -moz-appearance: textfield; }
 
-        .cosmos-time-separator { opacity: 0.5; margin-top: -6px; }
+        .cosmos-time-separator {
+            opacity: 0.4;
+            margin-top: -6px;
+            color: var(--text-secondary);
+        }
 
         .cosmos-underline {
-            width: 220px; height: 2px;
-            background: linear-gradient(90deg, transparent, #22d3ee, transparent);
-            opacity: 0.4;
+            width: 200px;
+            height: 3px;
+            background: var(--accent-gradient);
+            opacity: 0.3;
             border-radius: 2px;
-            box-shadow: 0 0 10px rgba(34,211,238,0.3);
         }
 
         .cosmos-quick-actions {
@@ -876,123 +796,117 @@
             flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
-            position: relative;
-            z-index: 1;
         }
 
         .cosmos-pill-btn {
             padding: 8px 18px;
             border-radius: 999px;
-            border: 1px solid rgba(168,85,247,0.25);
-            background: rgba(168,85,247,0.08);
-            color: #e2e8f0;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
+            border: 1.5px solid var(--text-tertiary);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            letter-spacing: 0.5px;
         }
 
         .cosmos-pill-btn:hover {
-            background: rgba(168,85,247,0.18);
-            border-color: rgba(168,85,247,0.5);
-            box-shadow: 0 0 15px rgba(168,85,247,0.2);
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
             transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
 
         .cosmos-controls {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            position: relative;
-            z-index: 1;
-            margin-top: 16px;
+            margin-top: 8px;
         }
 
         .cosmos-btn-row { display: flex; gap: 12px; }
 
         .cosmos-btn {
-            padding: 14px 24px;
-            border-radius: 16px;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
             border: none;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            letter-spacing: 1px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+        }
+
+        .cosmos-btn-row .cosmos-btn {
             flex: 1;
         }
 
         .cosmos-btn-primary {
-            background: linear-gradient(135deg, #7B2FBE 0%, #a855f7 100%);
+            background: var(--accent-gradient);
             color: #fff;
-            border: 1px solid rgba(168,85,247,0.4);
-            box-shadow: 0 0 25px rgba(168,85,247,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 113, 227, 0.3);
         }
 
         .cosmos-btn-primary:hover {
-            box-shadow: 0 0 35px rgba(168,85,247,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+            box-shadow: 0 8px 25px rgba(0, 113, 227, 0.4);
             transform: translateY(-2px);
         }
 
         .cosmos-btn-primary:active { transform: translateY(0) scale(0.98); }
 
         .cosmos-btn-secondary {
-            background: rgba(255,255,255,0.05);
-            color: #e2e8f0;
-            border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1.5px solid var(--text-tertiary);
         }
 
         .cosmos-btn-secondary:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(34,211,238,0.3);
-            box-shadow: 0 0 20px rgba(34,211,238,0.1);
+            border-color: var(--accent);
+            color: var(--accent);
             transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
 
         .cosmos-btn-full { width: 100%; }
         .cosmos-hidden { display: none !important; }
 
-        /* Cosmos Completion Overlay */
+        /* Completion Overlay */
         .cosmos-completion {
             position: absolute;
             inset: 0;
             z-index: 100;
-            background: rgba(10,10,15,0.9);
-            backdrop-filter: blur(12px);
+            background: var(--bg-card);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 24px;
+            gap: 20px;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.5s ease;
-            border-radius: 28px;
+            border-radius: var(--radius-lg);
         }
 
         .cosmos-completion.show { opacity: 1; pointer-events: all; }
 
         .cosmos-completion-message {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 1.8rem;
-            font-weight: 900;
-            color: #fff;
-            text-shadow: 0 0 30px rgba(168,85,247,0.6), 0 0 60px rgba(34,211,238,0.3);
+            font-weight: 700;
+            color: var(--text-primary);
             text-align: center;
-            animation: cosmos-pulse-glow 1.5s ease-in-out infinite;
         }
 
         .cosmos-completion-sub {
-            color: #94a3b8;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
         }
 
         /* Focus button on task */
@@ -1042,10 +956,10 @@
             .add-btn { width: 100%; justify-content: center; }
             .task-actions { opacity: 1; }
             .auth-section { padding: 24px; }
-            .cosmos-card { padding: 28px 20px; border-radius: 20px; }
-            .cosmos-time-display { font-size: 2.5rem; letter-spacing: 3px; }
-            .cosmos-btn { padding: 12px 18px; font-size: 0.85rem; }
-            .cosmos-pill-btn { padding: 6px 14px; font-size: 0.75rem; }
+            .cosmos-card { padding: 28px 20px; }
+            .cosmos-time-display { font-size: 2.8rem; letter-spacing: 3px; }
+            .cosmos-btn { padding: 14px 20px; font-size: 0.95rem; }
+            .cosmos-pill-btn { padding: 6px 14px; font-size: 0.8rem; }
         }
 
         ::-webkit-scrollbar { width: 8px; }
@@ -1146,35 +1060,6 @@
         .legend-dot.partial { background: linear-gradient(135deg, var(--success-light) 50%, var(--accent-light) 50%); }
         .legend-dot.full { background: var(--success-light); }
 
-        /* Day Detail Modal */
-        .day-detail { text-align: left; max-height: 300px; overflow-y: auto; }
-        .day-detail h3 { font-size: 18px; margin-bottom: 16px; color: var(--text-primary); }
-
-        .day-task-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--bg-primary);
-        }
-
-        .day-task-item:last-child { border-bottom: none; }
-
-        .day-task-status {
-            width: 20px; height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            flex-shrink: 0;
-        }
-
-        .day-task-status.done { background: var(--success); color: white; }
-        .day-task-status.pending { background: var(--text-tertiary); color: var(--text-secondary); }
-        .day-task-text { font-size: 14px; color: var(--text-primary); }
-        .day-task-text.completed { text-decoration: line-through; color: var(--text-secondary); }
-
         @media (max-width: 600px) {
             .calendar-grid { gap: 4px; }
             .calendar-day { font-size: 12px; }
@@ -1226,7 +1111,7 @@
             </div>
         </div>
 
-        <!-- Main App (hidden until logged in) -->
+        <!-- Main App -->
         <div id="mainApp" style="display: none;">
             <!-- Streak Counter -->
             <div class="streak-section">
@@ -1329,18 +1214,14 @@
         </div>
     </div>
 
-    <!-- ====== COSMOS TIMER MODAL ====== -->
+    <!-- ====== FOCUS TIMER MODAL ====== -->
     <div class="cosmos-overlay" id="cosmosTimer">
-        <div id="cosmos-starfield"></div>
-        <div class="nebula nebula-1"></div>
-        <div class="nebula nebula-2"></div>
-
         <div class="cosmos-card">
             <!-- Completion overlay inside card -->
             <div class="cosmos-completion" id="cosmosCompletion">
                 <div class="cosmos-completion-message">⏰ 時間到！</div>
                 <div class="cosmos-completion-sub">專注任務完成</div>
-                <button class="cosmos-btn cosmos-btn-primary" style="max-width: 200px;" onclick="dismissCosmosCompletion()">確認</button>
+                <button class="cosmos-btn cosmos-btn-primary" style="max-width: 200px; padding: 14px 32px;" onclick="dismissCosmosCompletion()">確認</button>
             </div>
 
             <div class="cosmos-header">
@@ -1397,7 +1278,7 @@
         let unsubscribeTasks = null;
         let isOnline = true;
 
-        // Cosmos Timer state
+        // Timer state
         let cosmosTimerState = { total: 1500, remaining: 1500, status: 'idle', interval: null, endTime: 0 };
         let currentFocusTask = null;
 
@@ -1446,6 +1327,8 @@
             if (addBtn) addBtn.addEventListener('click', window.addTask);
             const themeBtn = document.getElementById('themeToggleBtn');
             if (themeBtn) themeBtn.addEventListener('click', window.toggleTheme);
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) logoutBtn.addEventListener('click', window.signOutUser);
         });
 
         window.signOutUser = async function() {
@@ -1455,23 +1338,14 @@
                 currentUser = null;
                 tasks = [];
                 showToast('👋 已登出');
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
+            } catch (error) { console.error('Logout error:', error); }
         };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) logoutBtn.addEventListener('click', window.signOutUser);
-        });
 
         window.onAuthStateChanged(window.auth, (user) => {
             currentUser = user;
             updateAuthUI();
-            if (user) {
-                loadUserData();
-                setupRealtimeListener();
-            } else {
+            if (user) { loadUserData(); setupRealtimeListener(); }
+            else {
                 document.getElementById('mainApp').style.display = 'none';
                 document.getElementById('authLoggedOut').style.display = 'block';
                 document.getElementById('authLoggedIn').style.display = 'none';
@@ -1739,46 +1613,7 @@
             if (!progressMessages[percentage] || percentage === 0) showRandomQuote();
         }, 10000);
 
-        // ====== COSMOS TIMER ======
-        function createCosmosStarfield() {
-            const container = document.getElementById('cosmos-starfield');
-            if (container.children.length > 0) return; // Already created
-            for (let i = 0; i < 120; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                const size = Math.random() * 2.5 + 1;
-                star.style.width = size + 'px';
-                star.style.height = size + 'px';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
-                star.style.setProperty('--delay', (Math.random() * 5) + 's');
-                container.appendChild(star);
-            }
-        }
-
-        let cosmosShootingInterval = null;
-
-        function startCosmosShootingStars() {
-            if (cosmosShootingInterval) return;
-            const trigger = () => {
-                const overlay = document.getElementById('cosmosTimer');
-                if (!overlay.classList.contains('active')) return;
-                const star = document.createElement('div');
-                star.className = 'shooting-star';
-                star.style.top = (Math.random() * 40) + '%';
-                star.style.left = (Math.random() * 40) + '%';
-                overlay.appendChild(star);
-                setTimeout(() => star.remove(), 1200);
-                cosmosShootingInterval = setTimeout(trigger, 6000 + Math.random() * 4000);
-            };
-            cosmosShootingInterval = setTimeout(trigger, 2000);
-        }
-
-        function stopCosmosShootingStars() {
-            if (cosmosShootingInterval) { clearTimeout(cosmosShootingInterval); cosmosShootingInterval = null; }
-        }
-
+        // ====== FOCUS TIMER ======
         function getCosmosInputSeconds() {
             const h = parseInt(document.getElementById('cosmos-h').value) || 0;
             const m = Math.min(59, parseInt(document.getElementById('cosmos-m').value) || 0);
@@ -1799,15 +1634,12 @@
             currentFocusTask = taskId;
             const task = tasks.find(t => t.id === taskId);
             document.getElementById('cosmosTaskName').textContent = task ? task.text : '';
-            createCosmosStarfield();
             document.getElementById('cosmosTimer').classList.add('active');
-            startCosmosShootingStars();
             cosmosResetTimer();
         };
 
         window.closeCosmosTimer = function() {
             document.getElementById('cosmosTimer').classList.remove('active');
-            stopCosmosShootingStars();
             if (cosmosTimerState.status === 'running') {
                 clearInterval(cosmosTimerState.interval);
                 cosmosTimerState.status = 'idle';
@@ -1872,8 +1704,9 @@
         window.cosmosResetTimer = function() {
             cosmosTimerState.status = 'idle';
             clearInterval(cosmosTimerState.interval);
-            cosmosTimerState.remaining = cosmosTimerState.total;
-            setCosmosInputSeconds(1500); // default 25 min
+            cosmosTimerState.total = 1500;
+            cosmosTimerState.remaining = 1500;
+            setCosmosInputSeconds(1500);
             const display = document.getElementById('cosmosTimeDisplay');
             display.classList.remove('running', 'warning', 'flash');
             const inputs = [document.getElementById('cosmos-h'), document.getElementById('cosmos-m'), document.getElementById('cosmos-s')];
@@ -1901,7 +1734,6 @@
             cosmosPlayAlarm();
             document.getElementById('cosmosCompletion').classList.add('show');
 
-            // Auto complete the task
             if (currentFocusTask) {
                 toggleTask(currentFocusTask);
             }
@@ -1937,7 +1769,7 @@
             } catch (e) {}
         }
 
-        // Setup cosmos timer inputs
+        // Setup timer inputs
         document.addEventListener('DOMContentLoaded', () => {
             const inputs = [document.getElementById('cosmos-h'), document.getElementById('cosmos-m'), document.getElementById('cosmos-s')];
             inputs.forEach(input => {
@@ -2062,14 +1894,10 @@
 
         function showDayDetail(year, month, day, dateStr) {
             const dayData = getDayTaskData(dateStr);
+            if (dayData.tasks.length === 0) return;
             const dateDisplay = `${year}年${month + 1}月${day}日`;
-            let tasksHtml = '';
-            if (dayData.tasks.length === 0) tasksHtml = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">當日無任務</p>';
-            else tasksHtml = dayData.tasks.map(t => `<div class="day-task-item"><div class="day-task-status ${t.completed ? 'done' : 'pending'}">${t.completed ? '✓' : ''}</div><span class="day-task-text ${t.completed ? 'completed' : ''}">${escapeHtml(t.text)}</span></div>`).join('');
-            
-            // Simple alert for day detail
             const content = `${dateDisplay}\n\n任務列表 (${dayData.completed}/${dayData.total} 完成)\n` + dayData.tasks.map(t => `${t.completed ? '✓' : '○'} ${t.text}`).join('\n');
-            if (dayData.tasks.length > 0) alert(content);
+            alert(content);
         }
 
         // ====== INIT ======
