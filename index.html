@@ -957,7 +957,53 @@
         .toast-icon { font-size: 24px; }
 
         /* Responsive */
+        /* Scroll to Top Button */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            font-size: 20px;
+        }
+
+        .scroll-top-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .scroll-top-btn:hover {
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .scroll-top-btn:active {
+            transform: translateY(0) scale(0.95);
+        }
+
         @media (max-width: 600px) {
+            .scroll-top-btn {
+                width: 44px;
+                height: 44px;
+                bottom: 20px;
+                right: 20px;
+                font-size: 18px;
+            }
             body { padding: 20px 16px; }
             .header h1 { font-size: 36px; }
             .input-wrapper { flex-direction: column; }
@@ -1267,6 +1313,9 @@
         </div>
     </div>
 
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()" title="返回頂部">↑</button>
+
     <!-- Toast -->
     <div class="toast" id="toast">
         <span class="toast-icon">🏆</span>
@@ -1440,18 +1489,33 @@
             const taskRef = window.doc(window.db, 'users', currentUser.uid, 'tasks', id);
             try {
                 await window.updateDoc(taskRef, { completed: newCompleted, completedAt: newCompleted ? new Date().toISOString() : null });
-                if (newCompleted) { totalCompleted++; await updateUserStats(); updateStreak(); checkAchievements(); }
+                if (newCompleted) { 
+                    totalCompleted++; 
+                    await updateUserStats(); 
+                    updateStreak(); 
+                    checkAchievements(); 
+                } else {
+                    // Task uncompleted, decrement totalCompleted
+                    totalCompleted = Math.max(0, totalCompleted - 1);
+                    await updateUserStats();
+                }
             } catch (error) { console.error('Error toggling task:', error); showToast('❌ 更新失敗'); }
         };
 
         window.deleteTask = async function(id) {
             if (!currentUser) return;
             const taskElement = document.querySelector(`[data-task-id="${id}"]`);
+            const task = tasks.find(t => t.id === id);
             if (taskElement) {
                 taskElement.classList.add('removing');
                 try {
                     const taskRef = window.doc(window.db, 'users', currentUser.uid, 'tasks', id);
                     await window.deleteDoc(taskRef);
+                    // Update totalCompleted if the deleted task was completed
+                    if (task && task.completed) {
+                        totalCompleted = Math.max(0, totalCompleted - 1);
+                        await updateUserStats();
+                    }
                     showToast('🗑️ 任務已刪除');
                 } catch (error) { console.error('Error deleting task:', error); showToast('❌ 刪除失敗'); }
             }
@@ -1908,12 +1972,27 @@
             alert(content);
         }
 
+        // ====== SCROLL TO TOP ======
+        window.scrollToTop = function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        function handleScroll() {
+            const btn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        }
+
         // ====== INIT ======
         document.addEventListener('DOMContentLoaded', () => {
             updateDate();
             loadTheme();
             showRandomQuote();
             renderCalendar();
+            window.addEventListener('scroll', handleScroll);
         });
 
         window.addEventListener('resize', () => {
