@@ -17,7 +17,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBnrrKLMlbNuRyQFp--sGVx9o8-WNAIvjE",
@@ -45,6 +45,7 @@
         window.query = query;
         window.orderBy = orderBy;
         window.serverTimestamp = serverTimestamp;
+        window.getDocs = getDocs;
     </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1430,7 +1431,16 @@
                     const data = userDoc.data();
                     currentStreak = data.currentStreak || 0;
                     lastActiveDate = data.lastActiveDate || '';
-                    totalCompleted = data.totalCompleted || 0;
+                    // Recalculate totalCompleted from actual tasks to fix any past inconsistencies
+                    const tasksRef = window.collection(window.db, 'users', currentUser.uid, 'tasks');
+                    const tasksSnapshot = await window.getDocs(tasksRef);
+                    let actualCompleted = 0;
+                    tasksSnapshot.forEach((doc) => {
+                        if (doc.data().completed) actualCompleted++;
+                    });
+                    totalCompleted = actualCompleted;
+                    // Update Firebase with corrected value
+                    await window.updateDoc(userDocRef, { totalCompleted: actualCompleted });
                     document.getElementById('currentStreak').textContent = currentStreak;
                     document.getElementById('totalTasks').textContent = totalCompleted;
                 } else {
