@@ -1,6 +1,6 @@
 {
-  "name": "Focus Tasks",
-  "short_name": "Focus",
+  "name": "Focusly",
+  "short_name": "Focusly",
   "start_url": "/To-Do-List/?utm_source=homescreen",
   "display": "standalone",
   "background_color": "#ffffff",
