@@ -1486,7 +1486,7 @@
         <div class="header">
             <button class="tutorial-btn" onclick="openTutorial()" title="查看教學">📖 教學</button>
             <button class="theme-toggle" id="themeToggleBtn" title="切換主題">🌙</button>
-            <h1>Focus</h1>
+            <h1>Focusly</h1>
             <p class="subtitle">加油！</p>
             <div class="date-display" id="dateDisplay"></div>
         </div>
@@ -1723,16 +1723,16 @@
             </div>
             <div class="video-container">
                 <!-- 這裡可以放入你的影片連結 -->
-                <iframe 
+                <video 
                     id="tutorialVideo"
-                    src="" 
-                    title="Tutorial Video" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
+                    controls
+                    playsinline
+                    preload="auto">
+                    您的瀏覽器不支援影片播放。
+                </video>
             </div>
             <div class="notes-footer" style="justify-content: center;">
-                <p style="font-size: 14px; color: var(--text-secondary);">觀看教學影片以了解如何更好地使用 Focus Tasks</p>
+                <p style="font-size: 14px; color: var(--text-secondary);">觀看教學影片以了解如何更好地使用 Focusly</p>
             </div>
         </div>
     </div>
@@ -2197,16 +2197,20 @@
         window.openTutorial = function() {
             const modal = document.getElementById('tutorialModal');
             const video = document.getElementById('tutorialVideo');
-            // 你可以在這裡替換成你的影片連結
-            // 例如: video.src = "https://www.youtube.com/embed/你的影片ID?autoplay=1";
-            video.src = "https://www.youtube.com/embed/dQw4w9WgXcQ"; 
+            // 請將下方的網址替換成你 GitHub 上的影片 Raw 連結
+            // 例如: video.src = "https://raw.githubusercontent.com/用戶名/倉庫名/分支/tutorial.mp4";
+            if (!video.src || video.src === window.location.href) {
+                video.src = "https://www.w3schools.com/html/mov_bbb.mp4"; // 這裡暫時放一個範例 MP4
+            }
             modal.classList.add('active');
+            video.play().catch(e => console.log("Auto-play prevented"));
         };
 
         window.closeTutorial = function() {
             const modal = document.getElementById('tutorialModal');
             const video = document.getElementById('tutorialVideo');
-            video.src = ""; 
+            video.pause();
+            video.currentTime = 0; // 重置影片到開頭
             modal.classList.remove('active');
         };
 
