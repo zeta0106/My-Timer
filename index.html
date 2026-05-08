@@ -449,7 +449,54 @@
         .priority-btn.active[data-priority="low"] { background: var(--success); border-color: var(--success); }
 
         /* Filter */
-        .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; padding: 0 4px; }
+        .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; padding: 0 4px; align-items: center; flex-wrap: wrap; }
+
+        /* Sort Controls */
+        .sort-controls {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            padding: 4px 8px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--text-tertiary);
+        }
+
+        .sort-btn {
+            padding: 6px 12px;
+            border-radius: 15px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sort-btn:hover { background: var(--bg-primary); color: var(--text-primary); }
+        .sort-btn.active { color: var(--accent); background: var(--accent-light); }
+        
+        .sort-direction-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+        .sort-direction-btn:hover { background: var(--accent-light); color: var(--accent); }
 
         .filter-tab {
             padding: 10px 20px;
@@ -1461,6 +1508,13 @@
                 <button class="filter-tab active" onclick="setFilter('all')">全部 <span class="badge" id="badgeAll">0</span></button>
                 <button class="filter-tab" onclick="setFilter('pending')">待完成 <span class="badge" id="badgePending">0</span></button>
                 <button class="filter-tab" onclick="setFilter('completed')">已完成 <span class="badge" id="badgeCompleted">0</span></button>
+                
+                <!-- Sort Controls -->
+                <div class="sort-controls">
+                    <button class="sort-btn" id="sortByNameBtn" onclick="setSort('name')">名稱</button>
+                    <button class="sort-btn active" id="sortByTimeBtn" onclick="setSort('time')">時間</button>
+                    <button class="sort-direction-btn" id="sortDirectionBtn" onclick="toggleSortDirection()" title="切換升降序">↓</button>
+                </div>
             </div>
 
             <!-- Task List -->
@@ -1563,6 +1617,8 @@
         let currentUser = null;
         let currentPriority = 'medium';
         let currentFilter = 'all';
+        let currentSort = 'time'; // 'name' or 'time'
+        let sortAscending = false; // false = descending (newest first), true = ascending
         let currentStreak = 0;
         let lastActiveDate = '';
         let totalCompleted = 0;
@@ -1823,6 +1879,19 @@
             renderTasks();
         };
 
+        window.setSort = function(sortType) {
+            currentSort = sortType;
+            document.getElementById('sortByNameBtn').classList.toggle('active', sortType === 'name');
+            document.getElementById('sortByTimeBtn').classList.toggle('active', sortType === 'time');
+            renderTasks();
+        };
+
+        window.toggleSortDirection = function() {
+            sortAscending = !sortAscending;
+            document.getElementById('sortDirectionBtn').textContent = sortAscending ? '↑' : '↓';
+            renderTasks();
+        };
+
         window.handleKeyPress = function(event) { if (event.key === 'Enter') addTask(); };
 
         function renderTasks() {
@@ -1833,9 +1902,20 @@
             else if (currentFilter === 'completed') filteredTasks = tasks.filter(t => t.completed);
 
             filteredTasks.sort((a, b) => {
+                // Always keep uncompleted tasks above completed tasks
                 if (a.completed !== b.completed) return a.completed ? 1 : -1;
-                const priorityOrder = { high: 0, medium: 1, low: 2 };
-                return priorityOrder[a.priority] - priorityOrder[b.priority];
+                
+                let comparison = 0;
+                if (currentSort === 'name') {
+                    comparison = a.text.localeCompare(b.text, 'zh-Hant');
+                } else {
+                    // Sort by time (createdAt)
+                    const timeA = a.createdAt ? (a.createdAt.toDate ? a.createdAt.toDate().getTime() : new Date(a.createdAt).getTime()) : 0;
+                    const timeB = b.createdAt ? (b.createdAt.toDate ? b.createdAt.toDate().getTime() : new Date(b.createdAt).getTime()) : 0;
+                    comparison = timeA - timeB;
+                }
+                
+                return sortAscending ? comparison : -comparison;
             });
 
             if (filteredTasks.length === 0) { list.style.display = 'none'; emptyState.style.display = 'block'; }
