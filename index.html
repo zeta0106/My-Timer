@@ -1121,6 +1121,212 @@
             .calendar-day .day-count { font-size: 9px; }
             .calendar-legend { gap: 12px; }
         }
+
+        /* ====== NOTES MODAL ====== */
+        .notes-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+
+        .notes-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .notes-card {
+            width: 100%;
+            max-width: 520px;
+            background: var(--bg-card);
+            border: 1px solid var(--text-tertiary);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transform: scale(0.92) translateY(12px);
+            transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .notes-overlay.active .notes-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .notes-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .notes-card-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notes-card-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .notes-card-task-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-primary);
+            word-break: break-word;
+            line-height: 1.4;
+        }
+
+        .notes-close-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .notes-close-btn:hover {
+            background: var(--danger);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .notes-divider {
+            height: 1px;
+            background: var(--text-tertiary);
+            opacity: 0.4;
+            margin: -4px 0;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            min-height: 160px;
+            padding: 16px;
+            background: var(--bg-primary);
+            border: 1.5px solid var(--text-tertiary);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            resize: vertical;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .notes-textarea::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .notes-textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        .notes-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .notes-save-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .notes-save-status .save-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--text-tertiary);
+            transition: var(--transition);
+        }
+
+        .notes-save-status.saving .save-dot {
+            background: var(--warning);
+            animation: pulse 1s infinite;
+        }
+
+        .notes-save-status.saved .save-dot {
+            background: var(--success);
+        }
+
+        .notes-save-btn {
+            padding: 10px 24px;
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .notes-save-btn:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .notes-save-btn:active {
+            transform: translateY(0);
+        }
+
+        .notes-save-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Note indicator on task item */
+        .task-note-indicator {
+            font-size: 13px;
+            color: var(--accent);
+            opacity: 0.75;
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 600px) {
+            .notes-card { padding: 24px 20px; }
+            .notes-textarea { min-height: 130px; font-size: 14px; }
+        }
     </style>
 </head>
 <body>
@@ -1314,6 +1520,33 @@
         </div>
     </div>
 
+    <!-- ====== NOTES MODAL ====== -->
+    <div class="notes-overlay" id="notesModal">
+        <div class="notes-card">
+            <div class="notes-card-header">
+                <div class="notes-card-title-group">
+                    <span class="notes-card-label">備注</span>
+                    <div class="notes-card-task-name" id="notesTaskName"></div>
+                </div>
+                <button class="notes-close-btn" onclick="closeNotesModal()" title="關閉">✕</button>
+            </div>
+            <div class="notes-divider"></div>
+            <textarea
+                class="notes-textarea"
+                id="notesTextarea"
+                placeholder="輸入備注..."
+                oninput="onNotesInput()"
+            ></textarea>
+            <div class="notes-footer">
+                <div class="notes-save-status" id="notesSaveStatus">
+                    <span class="save-dot"></span>
+                    <span id="notesSaveText">未有變更</span>
+                </div>
+                <button class="notes-save-btn" id="notesSaveBtn" onclick="saveNotes()">儲存備注</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scroll to Top Button -->
     <button class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()" title="返回頂部">↑</button>
 
@@ -1339,6 +1572,11 @@
         // Timer state
         let cosmosTimerState = { total: 1500, remaining: 1500, status: 'idle', interval: null, endTime: 0 };
         let currentFocusTask = null;
+
+        // Notes state
+        let currentNotesTaskId = null;
+        let notesAutoSaveTimer = null;
+        let notesHasChanges = false;
 
         // Quotes
         const quotes = [
@@ -1605,8 +1843,8 @@
                 list.style.display = 'flex';
                 emptyState.style.display = 'none';
                 list.innerHTML = filteredTasks.map(task => `
-                    <div class="task-item ${task.completed ? 'completed' : ''}" data-task-id="${task.id}">
-                        <div class="checkbox-wrapper" onclick="toggleTask('${task.id}')">
+                    <div class="task-item ${task.completed ? 'completed' : ''}" data-task-id="${task.id}" onclick="openNotesModal('${task.id}')">
+                        <div class="checkbox-wrapper" onclick="event.stopPropagation(); toggleTask('${task.id}')">
                             <div class="custom-checkbox ${task.completed ? 'checked' : ''}"></div>
                             <div class="checkbox-ripple"></div>
                         </div>
@@ -1615,6 +1853,7 @@
                             <div class="task-meta">
                                 <span class="priority-badge ${task.priority}">${getPriorityLabel(task.priority)}</span>
                                 <span class="task-time">${formatTime(task.createdAt)}</span>
+                                ${task.notes ? `<span class="task-note-indicator">📝 有備注</span>` : ''}
                             </div>
                         </div>
                         ${!task.completed ? `<button class="focus-btn" onclick="event.stopPropagation(); openCosmosTimer('${task.id}')">🍅 專注</button>` : ''}
@@ -1694,6 +1933,92 @@
             const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
             if (!progressMessages[percentage] || percentage === 0) showRandomQuote();
         }, 10000);
+
+        // ====== NOTES MODAL ======
+        window.openNotesModal = function(taskId) {
+            if (!currentUser) return;
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            currentNotesTaskId = taskId;
+            notesHasChanges = false;
+
+            document.getElementById('notesTaskName').textContent = task.text;
+            document.getElementById('notesTextarea').value = task.notes || '';
+            setNotesSaveStatus('idle');
+
+            document.getElementById('notesModal').classList.add('active');
+            // Focus textarea after animation
+            setTimeout(() => { document.getElementById('notesTextarea').focus(); }, 200);
+        };
+
+        window.closeNotesModal = function() {
+            // Auto-save if there are unsaved changes
+            if (notesHasChanges) saveNotes(true);
+            document.getElementById('notesModal').classList.remove('active');
+            currentNotesTaskId = null;
+            notesHasChanges = false;
+            if (notesAutoSaveTimer) { clearTimeout(notesAutoSaveTimer); notesAutoSaveTimer = null; }
+        };
+
+        window.onNotesInput = function() {
+            notesHasChanges = true;
+            setNotesSaveStatus('saving');
+            if (notesAutoSaveTimer) clearTimeout(notesAutoSaveTimer);
+            notesAutoSaveTimer = setTimeout(() => { saveNotes(); }, 1500);
+        };
+
+        window.saveNotes = async function(silent) {
+            if (!currentUser || !currentNotesTaskId) return;
+            const notesText = document.getElementById('notesTextarea').value;
+            const saveBtn = document.getElementById('notesSaveBtn');
+            saveBtn.disabled = true;
+            setNotesSaveStatus('saving');
+            try {
+                const taskRef = window.doc(window.db, 'users', currentUser.uid, 'tasks', currentNotesTaskId);
+                await window.updateDoc(taskRef, { notes: notesText });
+                notesHasChanges = false;
+                setNotesSaveStatus('saved');
+                if (!silent) showToast('📝 備注已儲存');
+            } catch (error) {
+                console.error('Error saving notes:', error);
+                setNotesSaveStatus('idle');
+                if (!silent) showToast('❌ 儲存失敗');
+            } finally {
+                saveBtn.disabled = false;
+            }
+        };
+
+        function setNotesSaveStatus(status) {
+            const el = document.getElementById('notesSaveStatus');
+            const text = document.getElementById('notesSaveText');
+            el.className = 'notes-save-status';
+            if (status === 'saving') {
+                el.classList.add('saving');
+                text.textContent = '儲存中...';
+            } else if (status === 'saved') {
+                el.classList.add('saved');
+                text.textContent = '已儲存';
+            } else {
+                text.textContent = notesHasChanges ? '未儲存' : '未有變更';
+            }
+        }
+
+        // Close notes modal on overlay click
+        document.addEventListener('DOMContentLoaded', () => {
+            const notesOverlay = document.getElementById('notesModal');
+            if (notesOverlay) {
+                notesOverlay.addEventListener('click', (e) => {
+                    if (e.target === notesOverlay) closeNotesModal();
+                });
+            }
+        });
+
+        // Close notes modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('notesModal').classList.contains('active')) {
+                closeNotesModal();
+            }
+        });
 
         // ====== FOCUS TIMER ======
         function getCosmosInputSeconds() {
