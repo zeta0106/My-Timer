@@ -274,6 +274,108 @@
             color: var(--accent);
         }
 
+        .tutorial-btn {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--bg-card);
+            border: none;
+            padding: 0 16px;
+            height: 44px;
+            border-radius: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .tutorial-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+            color: var(--accent);
+        }
+
+        /* ====== TUTORIAL MODAL ====== */
+        .tutorial-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+
+        .tutorial-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .tutorial-card {
+            width: 100%;
+            max-width: 800px;
+            background: var(--bg-card);
+            border: 1px solid var(--text-tertiary);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .tutorial-overlay.active .tutorial-card {
+            transform: scale(1);
+        }
+
+        .tutorial-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tutorial-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .video-container iframe, .video-container video {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        @media (max-width: 600px) {
+            .tutorial-btn { padding: 0 12px; font-size: 13px; }
+            .tutorial-card { padding: 16px; }
+        }
+
         /* Progress Section */
         .progress-section {
             background: var(--bg-card);
@@ -1382,6 +1484,7 @@
     <div class="app-container">
         <!-- Header -->
         <div class="header">
+            <button class="tutorial-btn" onclick="openTutorial()" title="查看教學">📖 教學</button>
             <button class="theme-toggle" id="themeToggleBtn" title="切換主題">🌙</button>
             <h1>Focus</h1>
             <p class="subtitle">加油！</p>
@@ -1609,6 +1712,29 @@
     <div class="toast" id="toast">
         <span class="toast-icon">🏆</span>
         <span id="toastMessage">成就解鎖！</span>
+    </div>
+
+    <!-- ====== TUTORIAL MODAL ====== -->
+    <div class="tutorial-overlay" id="tutorialModal">
+        <div class="tutorial-card">
+            <div class="tutorial-header">
+                <div class="tutorial-title">📖 使用教學</div>
+                <button class="notes-close-btn" onclick="closeTutorial()" title="關閉">✕</button>
+            </div>
+            <div class="video-container">
+                <!-- 這裡可以放入你的影片連結 -->
+                <iframe 
+                    id="tutorialVideo"
+                    src="" 
+                    title="Tutorial Video" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <div class="notes-footer" style="justify-content: center;">
+                <p style="font-size: 14px; color: var(--text-secondary);">觀看教學影片以了解如何更好地使用 Focus Tasks</p>
+            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -2061,12 +2187,27 @@
         };
 
         window.closeNotesModal = function() {
-            // Auto-save if there are unsaved changes
-            if (notesHasChanges) saveNotes(true);
+            if (notesHasChanges) saveNotes();
             document.getElementById('notesModal').classList.remove('active');
             currentNotesTaskId = null;
             notesHasChanges = false;
             if (notesAutoSaveTimer) { clearTimeout(notesAutoSaveTimer); notesAutoSaveTimer = null; }
+        };
+
+        window.openTutorial = function() {
+            const modal = document.getElementById('tutorialModal');
+            const video = document.getElementById('tutorialVideo');
+            // 你可以在這裡替換成你的影片連結
+            // 例如: video.src = "https://www.youtube.com/embed/你的影片ID?autoplay=1";
+            video.src = "https://www.youtube.com/embed/dQw4w9WgXcQ"; 
+            modal.classList.add('active');
+        };
+
+        window.closeTutorial = function() {
+            const modal = document.getElementById('tutorialModal');
+            const video = document.getElementById('tutorialVideo');
+            video.src = ""; 
+            modal.classList.remove('active');
         };
 
         window.onNotesInput = function() {
